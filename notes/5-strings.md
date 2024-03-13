@@ -68,3 +68,38 @@ class Main{
     }
 }
 ```
+
+
+### Checking the length of a string
+```java
+class Main{
+    public static void main(String[] args){
+        String name = "Ernest Sarfo";
+        
+        System.out.println(name.length()); // it also counts the spaces in the strings
+    }
+}
+```
+
+### Checking whether a string is empty or not
+```java
+class Main{
+    public static void main(String[] args){
+        String name = "Ernest Sarfo";
+        
+        System.out.println(name.isEmpty()); // returns a boolean
+    }
+}
+```
+
+### Converting from uppercase to lowercase and vice versa
+```java
+class Main{
+    public static void main(String[] args){
+        String name = "Ernest Sarfo";
+        
+        System.out.println(name.toUpperCase());
+        System.out.println(name.toLowerCase());
+    }
+}
+```
