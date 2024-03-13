@@ -76,11 +76,28 @@ package programs;
 ////        System.out.println("Hello I am " + name + ", I am from " + country + " and I am " + age + " years old");
 //    }
 //}
-class Main{
-    public static void main(String[] args){
-        String name = "Ernest Sarfo";
-
-        System.out.println(name.length());
-        System.out.println(name.isEmpty());
-    }
-}
+//class Main{
+//    public static void main(String[] args){
+//        String name = "Ernest Sarfo";
+//
+//        System.out.println(name.length());
+//        System.out.println(name.isEmpty());
+//    }
+//}
+//import java.util.Scanner;
+//
+//class Main {
+//    public static void main(String[] args) {
+//        Scanner scanner = new Scanner(System.in);
+//
+//        System.out.print("What is your name? ");
+//        String name = scanner.nextLine();
+//
+//        System.out.printf("Hello %s. How old are you? ", name);
+//        int age = scanner.nextInt();
+//
+//        System.out.printf("I see. you are %d years old", age);
+//
+//        scanner.close();
+//    }
+//}
