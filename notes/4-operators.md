@@ -57,3 +57,17 @@ class Main{
     }
 }
 ```
+
+### Logical operators
+and - && - both comparisons have to be true for it to be true
+or - || - either comparisons have to be true for it to be true. prints false when both comparisons are false
+not - ! - reverses a boolean value
+```java
+class HelloWorld{
+    public static void main(String[] args){
+        int age = 25;
+        
+        System.out.printin(age >= 18 && age <= 40);
+    }
+}
+```
