@@ -103,3 +103,52 @@ class Main{
     }
 }
 ```
+
+### String comparisons
+Note that when you use "==" to compare two strings, it just checks if the object on the right side is the same as the object on the left side, which may not be true for most cases. Especially when the strings were created with the "new" keyword. So to actually check whether the content of two strings are equal, you can use the "equals()" method. see below
+```java
+class Main{
+    public static void main(String[] args){
+        String string1 = new String("abc");
+        String string2 = new String("abc");
+        
+        System.out.println(string1.equals(string2)); // outputs true
+        
+    }
+}
+```
+The above method is case sensitive. Which means if string1 is "ABC" and string2 is "abc", the above method will output false. To compare the strings while ignoring their cases, you can use the "equalsIgnoreCase()" method. see below
+```java
+class Main{
+    public static void main(String[] args){
+        String string1 = new String("abc");
+        String string2 = new String("ABC");
+
+        System.out.println(string1.equalsIgnoreCase(string2)); // outputs true
+    }
+}
+```
+
+### Replacing part of a string 
+use the .replace() method.
+```java
+class Main{
+    public static void main(String[] args){
+        String today = "The sky is blue";
+        
+        System.out.println(today.replace("blue", "red"));
+    }
+}
+```
+
+### Check if a string contains a substring or not
+use the .contains() method.
+```java
+class Main{
+    public static void main(String[] args){
+        String today = "The sky is blue";
+
+        System.out.println(today.contains("sky")); // outputs true
+    }
+}
+```
