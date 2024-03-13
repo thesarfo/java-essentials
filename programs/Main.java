@@ -15,7 +15,7 @@ package programs;
 ////        int number1 = 5;
 ////        double number2 = number1;
 //
-//        //explcit type conversion
+//        //explicit type conversion
 //        double number1 = 5.8;
 //        int number2 = (int)number1;
 //
@@ -45,12 +45,42 @@ package programs;
 //
 //    }
 //}
+//
+//class Main{
+//    public static void main(String[] args){
+//
+//        String literalString1 = "abc";
+//        String literalString2 = "abc";
+//
+//        String objectString1 = new String("efg");
+//        String objectString2 = new String("efg");
+//
+//        System.out.println(literalString1 == literalString2);
+//        System.out.println(objectString1 == objectString2);
+//    }
+//}
 
+//class Main{
+//    public static void main(String[] args){
+//        String name = "Ernest";
+//        String country = "ghana";
+//        int age = 21;
+//        double gpa = 3.88;
+//
+//        String formattedString = String.format("My name is %s. I am from %s and I am %d years old. My gpa is also %f",
+//                name, country,
+//                age, gpa);
+//
+//        System.out.println(formattedString);
+//
+////        System.out.println("Hello I am " + name + ", I am from " + country + " and I am " + age + " years old");
+//    }
+//}
 class Main{
     public static void main(String[] args){
+        String name = "Ernest Sarfo";
 
-        int number = 25;
-
-        System.out.println(++number);
+        System.out.println(name.length());
+        System.out.println(name.isEmpty());
     }
 }
