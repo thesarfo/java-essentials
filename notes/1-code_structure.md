@@ -56,7 +56,7 @@ public class MyFirstApp{
 5. void - the return type of the method, void means it has no return value
 6. main - the name of the method
 7. String[] args - arguments to the method...this method must be given an array of Strings, and the array will be called args
-8. System.out.print - print to the standart output the string "I rule"
+8. System.out.print - print to the standard output the string "I rule"
 
 
 ### Notes
