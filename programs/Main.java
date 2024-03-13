@@ -9,6 +9,8 @@ package programs;
 //    }
 //}
 
+
+
 //class Main{
 //    public static void main(String[] args){
 //        // implicit type conversion, the compiler does it for us
@@ -22,6 +24,8 @@ package programs;
 //        System.out.println(number2);
 //    }
 //}
+
+
 
 //class Main{
 //    public static void main(String[] args){
@@ -46,6 +50,8 @@ package programs;
 //    }
 //}
 //
+
+
 //class Main{
 //    public static void main(String[] args){
 //
@@ -59,6 +65,8 @@ package programs;
 //        System.out.println(objectString1 == objectString2);
 //    }
 //}
+
+
 
 //class Main{
 //    public static void main(String[] args){
@@ -76,6 +84,9 @@ package programs;
 ////        System.out.println("Hello I am " + name + ", I am from " + country + " and I am " + age + " years old");
 //    }
 //}
+
+
+
 //class Main{
 //    public static void main(String[] args){
 //        String name = "Ernest Sarfo";
@@ -99,5 +110,40 @@ package programs;
 //        System.out.printf("I see. you are %d years old", age);
 //
 //        scanner.close();
+//    }
+//}
+
+
+
+//import java.util.Arrays;
+//public class Main{
+//    public static void main(String[] args){
+//        char vowels[] = new char[5];
+//
+//        vowels[0] = 'a';
+//        vowels[1] = 'e';
+//        vowels[2] = 'i';
+//        vowels[3] = 'o';
+//        vowels[4] = 'u';
+//
+//        System.out.println(Arrays.toString(vowels));
+//    }
+//}
+
+
+
+//import java.util.Arrays;
+//
+//public class Main{
+//    public static void main(String[] args){
+//        char vowels[] = {'a', 'e', 'i', 'o', 'u'};
+//
+//        char key = 'o';
+//
+//        Arrays.sort(vowels); // binarysearch only works on sorted arrays
+//
+//        int foundItemIndex = Arrays.binarySearch(vowels, key); // return the index of the key if found
+//
+//        System.out.println(foundItemIndex);
 //    }
 //}
