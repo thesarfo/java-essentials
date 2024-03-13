@@ -147,3 +147,62 @@ package programs;
 //        System.out.println(foundItemIndex);
 //    }
 //}
+
+
+
+//class Main{
+//    public static void main(String[] args){
+//        for (int number = 1; number <= 10; number++){
+//            System.out.println(number );
+//        }
+//    }
+//}
+
+
+//class Main{
+//    public static void main(String[] args){
+//        int numbers[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+//
+//        for (int index = 0; index < numbers.length; index++){
+//            System.out.println((numbers[index]));
+//        }
+//
+//    }
+//}
+//
+//
+//class Main{
+//    public static void main(String[] args){
+//        for(int number = 1; number <= 10; number++){
+//            for(int multiplier = 1; multiplier < 10; multiplier++ ){
+//                System.out.printf("%d x %d = %d \n", number, multiplier, number*multiplier);
+//            }
+//        }
+//    }
+//}
+
+
+//class Main{
+//    public static void main(String[] args){
+//        int numbers[] = {1, 2, 3, 4, 5};
+//
+//        for(int number : numbers){
+//            System.out.println(number);
+//        }
+//    }
+//}
+//
+//
+//class Main{
+//    public static void main(String[] args){
+//        int number = 5;
+//        int multiplier = 1;
+//
+//        while(multiplier <= 10){
+//            System.out.printf("%d x %d = %d \n", number, multiplier, number * multiplier);
+//
+//            multiplier++;
+//        }
+//
+//    }
+//}
