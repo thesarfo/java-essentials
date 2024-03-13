@@ -34,6 +34,8 @@ Usually for numbers, the int and double types should suffice for normal numbers 
 ### Reference type
 They store the reference to a memory location where a dynamic object is being stored. we will come there later
 
+An example is an array
+
 
 #### Type conversion
 You can convert a variable to another datatype. for instance, we can convert an integer to a double. We have implicit and explicit type conversions, with implicit, the compiler itself does it for us...whilst with explicit, we have to explicitly tell the compiler that we wanna perform a type conversion. see below.
