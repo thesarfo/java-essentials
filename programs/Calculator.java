@@ -17,21 +17,42 @@ public class Calculator {
         System.out.print("What operation do you want to perform?: ");
         String operation = scanner.nextLine();
 
-        if ( operation.equals("sum")){
-            System.out.printf("%f + %f = %f", number1, number2, number1+number2 );
-        } else if (operation.equals("sub")) {
-            System.out.printf("%f - %f = %f", number1, number2, number1-number2);
-        } else if (operation.equals("mul")) {
-            System.out.printf("%f * %f = %f", number1, number2, number1*number2);
-        } else if (operation.equals("div")) {
-            if (number2 == 0){
-                System.out.println("Cannot divide by zero");
-            } else {
-                System.out.printf("%f * %f = %f", number1, number2, number1/number2);
-            }
-        } else {
-            System.out.printf("%s is not a supported operation.", operation);
+        switch(operation){
+            case "sum":
+                System.out.printf("%f + %f = %f", number1, number2, number1+number2);
+                break;
+            case "sub":
+                System.out.printf("%f - %f = %f", number1, number2, number1-number2);
+                break;
+            case "mul":
+                System.out.printf("%f * %f = %f", number1, number2, number1*number2);
+                break;
+            case "div":
+                if (number2 == 0){
+                    System.out.println("Cannot divide by zero");
+                } else {
+                    System.out.printf("%f * %f = %f", number1, number2, number1/number2);
+                }
+                break;
+            default:
+                System.out.printf("%s is not a supported operation", operation);
         }
+
+//        if ( operation.equals("sum")){
+//            System.out.printf("%f + %f = %f", number1, number2, number1+number2 );
+//        } else if (operation.equals("sub")) {
+//            System.out.printf("%f - %f = %f", number1, number2, number1-number2);
+//        } else if (operation.equals("mul")) {
+//            System.out.printf("%f * %f = %f", number1, number2, number1*number2);
+//        } else if (operation.equals("div")) {
+//            if (number2 == 0){
+//                System.out.println("Cannot divide by zero");
+//            } else {
+//                System.out.printf("%f * %f = %f", number1, number2, number1/number2);
+//            }
+//        } else {
+//            System.out.printf("%s is not a supported operation.", operation);
+//        }
 
         scanner.close();
     }
