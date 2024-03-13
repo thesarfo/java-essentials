@@ -57,3 +57,10 @@ void - the return type of the method, void means it has no return value
 main - the name of the method
 String[] args - arguments to the method...this method must be given an array of Strings, and the array will be called args
 System.out.print - print to the standart output the string "I rule"
+
+
+### Notes
+
+Note that a java source file ends with the .java extension, and a compiled bytecode file ends with the .class extension. In every java code, your program must have only one top level public class, and that class has to match the name of the source file.
+
+Lets say you hava a source file with multiple classes in it. When you compile the code, the JVM creates bytecode .class files for each class in your source file. To avoid any confusion with this, JVM is designed to treat the class that has the same name as your source file as the entrypoint to your application
