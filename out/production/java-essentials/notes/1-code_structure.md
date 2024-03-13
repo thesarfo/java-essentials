@@ -49,14 +49,14 @@ public class MyFirstApp{
 }
 ```
 
-public - so everyone can access it
-class - definition of a class
-MyFirstApp - the name of the class
-static - we'll get there later
-void - the return type of the method, void means it has no return value
-main - the name of the method
-String[] args - arguments to the method...this method must be given an array of Strings, and the array will be called args
-System.out.print - print to the standart output the string "I rule"
+1. public - so everyone can access it
+2. class - definition of a class
+3. MyFirstApp - the name of the class
+4. static - we'll get there later
+5. void - the return type of the method, void means it has no return value
+6. main - the name of the method
+7. String[] args - arguments to the method...this method must be given an array of Strings, and the array will be called args
+8. System.out.print - print to the standard output the string "I rule"
 
 
 ### Notes
