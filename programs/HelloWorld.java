@@ -6,12 +6,12 @@ public class HelloWorld {
     public static void main(String[] args){
         User user = new User("Ernest Sarfo", "2000-01-31");
 
-        Book book = new Book("Cinderella", "Walt Disney");
+        Book cinderella = new Book("Cinderella", "Walt Disney", 270);
+        AudioBook dracula = new AudioBook("Dracula", "Bram Stoker", 30000);
 
-        user.borrow(book);
+        System.out.println(dracula.toString());
 
-        System.out.printf("Hello %s, you were born in %s, and he is now %d years old. \n", user.getName(), user.getBirthday(), user.age());
-
-        System.out.printf("%s has borrowed these books: %s", user.getName(), user.borrowedBooks());
     }
 }
+
+
