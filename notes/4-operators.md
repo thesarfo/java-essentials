@@ -66,3 +66,19 @@ increment - += or ++ - adds a value to a variable
 decrement - -= or -- - subtracts a value to a variable
 
 You can add the increment or decrement operators before the variable.
+
+
+#### Ternary operator (?)
+In the classname variable, the '?' is called the ternary operator. What this means is that if income is greater than 100,000, we will assign the string 'First' to the variable className, else we will assign the string 'Economy' to the variable className.
+
+```java
+public class Practice {
+    public static void main(String[] args){
+        int income = 120_000;
+        
+        String className = income > 100_000 ? "First": "Economy";
+
+        System.out.println(income);
+    }
+}
+```
