@@ -342,3 +342,37 @@ public class HelloWorld {
     }
 }
 ```
+
+### Inheritance
+Now lets say we have different types of books, Audiobooks, Ebooks, Paperback books etc. Now all these are types of books, which means they will share some common properties, like title, author, pageCount.
+
+This means that when we are creating an Audiobook class, it needs to inherit some properties from a Book class(which is our parent class), and then we add more properties to it. see below
+```java
+// AudioBook.java
+public class AudioBook extends Book {
+    private  int runTime;
+
+    AudioBook(String title, String author, int runTime){
+        super(title, author, 0); // the 0 is for pageCount
+        this.runTime = runTime;
+    }
+}
+```
+Our child class(AudioBook) extends our parent class(Book). and then inside it, we specify the additional properties we want to add to our child class. Then we create a constructor method for our child class, which must include all the properties of our parent class, as well as the additional property we just defined. Then se use the 'super()' keyword to inherit the properties of the parent class, and then set our additional property to the property we've defined at the class level.
+
+We can create an object of our AudioBook class and print it out. see below
+```java
+// Main.java
+public class Main {
+    public static void main(String[] args){
+        User user = new User("Ernest Sarfo", "2000-01-31");
+
+        Book cinderella = new Book("Cinderella", "Walt Disney", 270);
+        AudioBook dracula = new AudioBook("Dracula", "Bram Stoker", 30000);
+
+        System.out.println(dracula.toString());
+
+    }
+}
+
+```
