@@ -22,6 +22,7 @@ class HelloWorld{
         
         // characters
         char copyrightSymbol = '\u00A9';
+        char single = 'a';
         
         System.out.println(("This is the copyright symbol: " + copyrightSymbol));
     }
