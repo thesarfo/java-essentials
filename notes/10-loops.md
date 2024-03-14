@@ -109,3 +109,16 @@ class Main{
 ```
 The main difference between this and a regular while loop is that in a do while loop, the loop body will be executed, and then the condition will be checked, whereas it works the other way round in a while loop.
 
+## For each
+```java
+public class Main{
+    public static void main(String[] args){
+        String[] fruits = {"Apple", "Banana", "Cacao"};
+        
+        for (String fruit : fruits){
+            System.out.println(fruit);
+        }
+    }
+}
+```
+What this means is that for each 'fruit' in the fruits array, we want to print out that fruit. The limitation of the for each loop is that it only works forward only, i.e we cant print out each fruit in the array from the last element to first element, but we can do that with the normal loop. Another limitation of the for each loop is that we dont have access to the index of each element.
