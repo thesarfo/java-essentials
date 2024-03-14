@@ -8,8 +8,9 @@ public class HelloWorld {
 
         Book cinderella = new Book("Cinderella", "Walt Disney", 270);
         AudioBook dracula = new AudioBook("Dracula", "Bram Stoker", 30000);
+        Ebook jeeves = new Ebook("Carry on Jeeves", "P.G Wodehouse", 280, "PDF");
 
-        System.out.println(dracula.toString());
+        System.out.println(jeeves.toString());
 
     }
 }
