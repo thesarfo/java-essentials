@@ -31,7 +31,7 @@ public static void main(String[] args){
         String country = "ghana";
         int age = 21;
         
-        System.out.println("Hello I am " + name + ", I am from " + country + " and I am " + age " years old");
+        System.out.println("Hello I am " + name + ", I am from " + country + " and I am " + age + " years old");
     }
 }
 ```
