@@ -5,7 +5,7 @@ For instance, we can build a book borrowing system where a user can come registe
 In this aforementioned system, there can be two objects. The user and the book. We can store info like the user's name and birthday in the user object, and the book name and its author in the book object.
 
 ### User class
-First we have to create a file(or class) called User.java, where we will initial the User class, and its properties.
+First we have to create a file(or class) called User.java, where we will initialize the User class, and its properties.
 
 ```java
 // User.java
@@ -78,6 +78,15 @@ public class Main {
 }
 ```
 Now we can then print our the age as an integer.
+
+Note that when creating a new object we did it like this..
+```java
+        User youngerUser = new User();
+```
+There is nothing wrong with it, but note how we have repeated the 'User' keyword twice, this makes the code a bit noisy. To streamline this, we can use the var keyword.
+```java
+        var youngerUser = new User();
+```
 
 
 ### Book class
