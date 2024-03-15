@@ -61,7 +61,6 @@ public class Mortgage {
 
 
     public static double calculateMortgage(int principal, float annualInterest, byte years){
-
         float monthlyInterest = annualInterest / PERCENT / MONTHS;
         short numberOfPayments = (short)(years * MONTHS);
 
