@@ -2,7 +2,8 @@ package programs;
 
 public class Practice {
     public static void main(String[] args) {
-        var browser = new Browser();
-        browser.navigate("google.com");
+        var control = new UIControl();
+        control.disable();
+        System.out.println(control.isEnabled());
     }
 }
