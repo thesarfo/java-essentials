@@ -391,6 +391,13 @@ Here’s an encapsulation starter rule of thumb (all standard disclaimers about 
 
 1. Mark instance variables private
 2. Mark getters and setters public
+
+1. Encapsulation gives you control over who changes the data in your class and how. 
+2. Make an instance variable private so it cant me changed by accessing the variable directly
+3. Create a setter to control how other code interacts with our data. For instance, we can add validatioin code inside a setter to make sure the value isnt changed to something invalid
+4. Instance variables are assigned values by default
+5. Local variables are not assigned a value by default
+
 ```java
 package head_first_java;
 

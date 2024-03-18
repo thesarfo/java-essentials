@@ -7,3 +7,9 @@ public class Practice {
 }
 
 ```
+
+### Variables
+1. Instance variables - declared within a class but not within a method
+2. Local variable - declared in a method
+3. Local variables must be initialized before use
+4. 
