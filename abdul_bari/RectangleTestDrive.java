@@ -1,7 +1,7 @@
 package abdul_bari;
 
 
-class Rectangle {
+class Rect {
     public double length;
     public double breadth;
 
@@ -19,7 +19,7 @@ class Rectangle {
 }
 public class RectangleTestDrive {
     public static void main(String[] args) {
-        Rectangle r1 = new Rectangle();
+        Rect r1 = new Rect();
         r1.length = 6;
         r1.breadth = 5;
 
