@@ -24,7 +24,7 @@ Even though the Sub class is inheriting from the Super class, the Sub class is n
 If a class inherits from an abstract class, that class also becomes an abstract class. That class will become concrete if it overrides all the methods of the parent class.
 
 ### Why do we need abstract classes
-Such classes are meant only for inheritance. So you must write a subclass that inherits from the super(abstract) class, and override the super class's methods. Abstract classes are used for defining standards and imposing standards. See the AbstractHospitalExample in the abdul_bari folder.
+Such classes are meant only for multiple inheritance and polymorphism. So you must write a subclass that inherits from the super(abstract) class, and override the super class's methods. Abstract classes are used for defining standards and imposing standards. See the AbstractHospitalExample in the abdul_bari folder.
 Review the 'AbstractExample' file in the abdul_bari folder to view an implementation
 
 #### Note
