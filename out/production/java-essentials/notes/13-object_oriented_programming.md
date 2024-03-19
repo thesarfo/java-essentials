@@ -385,3 +385,55 @@ public class Main {
 }
 
 ```
+
+### Encapsulation
+Here’s an encapsulation starter rule of thumb (all standard disclaimers about rules of thumb are in effect): mark your instance variables private and provide public getters and setters for access control. When you have more design and coding savvy in Java, you will probably do things a little differently, but for now, this approach will keep you safe.
+
+1. Mark instance variables private
+2. Mark getters and setters public
+
+1. Encapsulation gives you control over who changes the data in your class and how. 
+2. Make an instance variable private so it cant me changed by accessing the variable directly
+3. Create a setter to control how other code interacts with our data. For instance, we can add validatioin code inside a setter to make sure the value isnt changed to something invalid
+4. Instance variables are assigned values by default
+5. Local variables are not assigned a value by default
+
+```java
+package head_first_java;
+
+
+class GoodDog{
+    private int size;
+
+    public int getSize(){
+        return size;
+    }
+    public void setSize(int s) {
+        this.size = s;
+    }
+    void bark(){
+        if (size > 60){
+            System.out.println("Woof Woof");
+        } else if (size > 14){
+            System.out.println("Ruff Ruff");
+        } else {
+            System.out.println("Yip Yip");
+        }
+    }
+}
+public class GoodDogTestDrive {
+    public static void main(String[] args){
+        // create new objects of the above class
+        GoodDog one = new GoodDog();
+        one.setSize(79); // use the setter
+        GoodDog two = new GoodDog();
+        two.setSize(8);
+
+        System.out.println("Dog one: " + one.getSize()); // use the getter
+        System.out.println("Dog two: " + one.getSize());
+
+        one.bark();
+        two.bark();
+    }
+}
+```
