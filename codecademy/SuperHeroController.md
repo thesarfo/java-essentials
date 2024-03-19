@@ -1,3 +1,4 @@
+```java
 package codecademy;
 
 import java.util.List;
@@ -54,3 +55,4 @@ public class SuperHeroController {
         return superReport;
     }
 }
+```
