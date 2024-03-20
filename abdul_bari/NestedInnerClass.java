@@ -20,8 +20,8 @@ class Outer{
 
 public class NestedInnerClass {
     public static void main(String[] args) {
-        AnonOuter o = new AnonOuter();
+        Outer o = new Outer();
         o.outerDisplay();
-        AnonOuter.Inner i = new AnonOuter().new Inner();
+        Outer.Inner i = new Outer().new Inner();
     }
 }
