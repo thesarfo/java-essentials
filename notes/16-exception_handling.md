@@ -1,5 +1,8 @@
 There are 3 types of exceptions in Java. There are checked, unchecked and errors.
 
+1. Checked exception: You have to handle them using try catch. ie ClassNotFoundException, IOException, InterruptedException etc
+2. Unchecked: Its optional to handle or not handle them. ie ArithmeticException, IndexOutOfBoundsException, NullPointerException.
+
 To catch an error, you have to wrap your code in a try catch block. see below.
 ```java
 import java.io.FileNotFoundException;
