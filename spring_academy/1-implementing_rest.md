@@ -85,14 +85,15 @@ Sure, let's focus on the most crucial parts of the code:
 - `ResponseEntity.ok(page.getContent())`: Constructs an HTTP response entity with a status code of 200 (OK) and sets the response body to the content of the fetched page of `CashCard` objects. `page.getContent()` retrieves the actual content (i.e., the list of `CashCard` objects) from the `Page` object.
 
 ## IMPLEMENTING A GET REQUEST (FOR ALL ITEMS)
+
 ```java
 @GetMapping()
 private ResponseEntity<Iterable<CashCard>> findAll() {
    return ResponseEntity.ok(cashCardRepository.findAll());
 }
 ```
-Once again we're using one of Spring Data's built-in implementations: CrudRepository.findAll(). Our implementing Repository, CashCardRepository, will automatically return all CashCard records from the database when findAll() is invoked.
 
+Once again we're using one of Spring Data's built-in implementations: CrudRepository.findAll(). Our implementing Repository, CashCardRepository, will automatically return all CashCard records from the database when findAll() is invoked.
 
 ## IMPLEMENTING A POST REQUEST
 
@@ -127,3 +128,89 @@ Note that savedCashCard.id is used as the identifier, which matches the GET endp
 Where did UriComponentsBuilder come from? We were able to add UriComponentsBuilder ucb as a method argument to this POST handler method and it was automatically passed in. How so? It was injected from our now-familiar friend, Spring's IoC Container.
 
 return ResponseEntity.created(locationOfNewCashCard).build(); Finally, we return 201 CREATED with the correct Location header.
+
+## IMPLEMENTING A PUT REQUEST
+
+1. **PUT vs. POST**:
+
+   - **PUT**: Used for creating or replacing a resource where the client supplies the URI.
+   - **POST**: Used for creating a sub-resource where the server generates and returns the URI.
+   - In the Cash Card API, PUT is not used for creating resources, while POST is used for creating Cash Cards.
+
+2. **PUT for Update**:
+
+   - Used to replace the entire record with the object in the request body.
+   - Implemented in the Cash Card API for updating existing Cash Cards.
+   - Returns a 204 NO CONTENT status code upon success, indicating that the request was processed successfully without returning any content in the response body.
+
+3. **Security**:
+
+   - Follows the same strategy as GET requests for handling unauthorized access and non-existent IDs.
+   - Returns a 404 NOT FOUND status code for unauthorized updates or attempts to update non-existent IDs.
+
+4. **API Decisions**:
+   - PUT is not supported for creating Cash Cards.
+   - Update endpoint uses the PUT verb, replaces existing Cash Cards, and returns a 204 NO CONTENT upon success.
+   - Unauthorized updates or attempts to update non-existent IDs result in a 404 NOT FOUND response.
+
+Below is an example put request(with authentication)
+
+```java
+    @PutMapping("/{requestedId}")
+    private ResponseEntity<Void> putCashCard(@PathVariable Long requestedId, @RequestBody CashCard cashCardUpdate, Principal principal) {
+        CashCard cashCard = findCashCard(requestedId, principal);
+        if (cashCard != null) {
+            CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
+            cashCardRepository.save(updatedCashCard);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+```
+
+## IMPLEMENTING A DELETE REQUEST
+
+1. **Data Specification for Delete Endpoint**:
+
+   - **Request**:
+     - Verb: DELETE
+     - URI: /cashcards/{id}
+     - Body: (empty)
+   - **Response**:
+     - Status code: 204 NO CONTENT
+     - Body: (empty)
+
+2. **Response Codes and Use Cases**:
+
+   - 204 NO CONTENT: Successful deletion where the record exists, the principal is authorized, and the record was successfully deleted.
+   - 404 NOT FOUND: Returned when either the record does not exist (non-existent ID) or when the record exists, but the principal is not the owner.
+   - The use of 404 for both cases aims to prevent leaking information about the existence of specific IDs to unauthorized users.
+
+3. **Additional Options**:
+
+   - **Hard and Soft Delete**:
+     - **Hard Delete**: Permanently removes the record from the database.
+     - **Soft Delete**: Marks records as "deleted" in the database without fully removing them.
+   - **Audit Trail and Archiving**:
+     - Capture historical information about modifications to data records, including deletion.
+     - Strategies include archiving deleted data, adding audit fields to records, and maintaining an audit trail.
+   - **Combination Strategies**:
+     - Implementing soft delete and then hard-deleting or archiving soft-deleted records after a certain period.
+     - Implementing hard delete and archiving deleted records.
+     - Keeping an audit log of operations.
+
+4. **Specification and Implementation**:
+   - The chosen response status code (204 NO CONTENT) implies that soft-delete is not happening, as there's no body in the response.
+   - The specification doesn't determine whether hard or soft delete should be implemented or whether to add audit fields or maintain an audit trail. These decisions depend on specific requirements and use cases.
+
+Below is an example of a delete request with authentication
+```java
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deleteCashCard(@PathVariable Long id, Principal principal) {
+        if (cashCardRepository.existsByIdAndOwner(id, principal.getName())) {
+            cashCardRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+```
