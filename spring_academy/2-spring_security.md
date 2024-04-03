@@ -105,6 +105,98 @@ public class SecurityConfiguration {
 Now, when you start the application and visit the endpoint, you can provide the signin page with the credentials you have provided above. and you will be able to sign in
 
 
+## Configuring Authorization in Spring Security
+Now, we know that all APIs need authentication, but what we want to do is that we want different parts of our API to have different access requirements. We can have something like this
+
+
+| API   | Roles allowed to access it |
+|-------|----------------------------|
+| /     | All (authenticated)        |
+| /user | USER and ADMIN roles       |
+| /admin| ADMIN role                 |
+
+
+So before we do that, we need to get hold of our authorization object, to configure authorization, just like we did with authentication. When doing authentication, we were about to use the AuthenticationManagerbuilder, but since that was deprecated, we went with the InMemoryDetailsManager. For authorization, we would've used HttpSecurity, but since that is deprecated, we will use a SecurityFilterChain. Note that the below implementation assumes that you have two users, one with the role of "USER" and another with the role of "ADMIN". see below
+```java
+@Bean
+   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+                )
+                .formLogin(withDefaults());
+        return http.build();
+
+    }
+```
+We are configuring a SecurityFilterChain for HttpSecurity, specifying authorization rules for HTTP requests. All paths (/**) are restricted only to users with the role of ADMIN. Additionally, authentication is required for any other request. The configuration also enables default form-based authentication.
+
+Our security configuration will look like this
+```java
+@Configuration
+public class SecurityConfiguration {
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("thesarfo")
+                .password("password")
+                .roles("USER")
+                .build();
+
+        UserDetails admin = User.withDefaultPasswordEncoder()
+                .username("admin")
+                .password("adminpassword")
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
+    }
+
+   @Bean
+   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+                )
+                .formLogin(withDefaults());
+        return http.build();
+
+    }
+}
+```
+
+Now, note that the above implementation only allows admin users to log into our app, now what if we want to log out the admin user to try another user. Well, just like how Spring Security automatically created a login endpoint for us, there is also a logout endpoint we can visit, in order to sign out and then sign in as another user. If we wanted to provide different levels of access to different endpoints, we could do something like this.
+```java
+   @Bean
+   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/user").hasAnyRole("USER", "ADMIN") // both admin and users can access the /user endpoint
+                                .requestMatchers("/").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .formLogin(withDefaults());
+        return http.build();
+    }
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
