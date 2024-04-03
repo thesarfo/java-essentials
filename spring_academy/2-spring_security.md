@@ -186,13 +186,131 @@ Now, note that the above implementation only allows admin users to log into our 
     }
 ```
 
+## How to do JDBC authentication in Spring Security
+First of all, you need to add some dependencies, the database, and the jdbc api. For this demonstration, we will add the H2 and the JDBC api dependencies, as well as the spring security dependency. 
+
+First, we need to specify a datasource(database), and then configure the datasource, with the AuthenticationManager builder. Since we are using jdbc, with h2, we need to configure jdbcAuthentication, and then specify our datasource within which we want spring security to query for user credentials.
+
+After which, we will use a SecurityFilterChain to authorize the requests and endpoints to the users and roles we have created in our database. see below for a sample configuration
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration {
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .withDefaultSchema()
+                .withUser(User.withUsername("thesarfo")
+                        .password("password")
+                        .roles("USER")
+                )
+                .withUser(User.withUsername("admin")
+                        .password("adminpassword")
+                        .roles("ADMIN")
+                );
+
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(withDefaults());
+
+        return http.build();
+    }
+    
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+}
+```
+
+Our datasource points to the h2 database, since that is the default, and that is what we have specified in our project too. But in case your datasource pointed to a postgresql db, spring security will create the necessary configurations for postgresql. So when the application starts up, spring security basically populates our database with the users we have created, with a default schema. Spring Security says we don't have to worry about creating a schema for users, so by using the ".withDefaultSchema()" we are telling spring security to create a user for us.
 
 
+Obviously, this is not a practical way of doing stuff, especially in production apps. We dont want to populate the default schema and hardcode user details. We just assume that those things are in our database already.
+
+This will eb our ideal configuration
+```java
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication()
+                .dataSource(dataSource);
+   }
+```
+
+What the above means is that we have a database, we have a schema, and we have users already existing in our database. And we are just configuring spring security to connect to the database. What this means is that there needs to be an extra configuration somewhere that defines the user schema as well as aids in the user creating process.
+
+Spring security has the default user schema on their website, we can copy that and then create a "schema.sql" file(default mechanism in spring boot that populates our db with schema that we specify), to create a schema for our users. However, note that if we edit the default schema we took from the spring security website, we will be responsible for telling spring security to work with that edited schema. But for now let's go with the default schema(for h2 database)
+```jdbc
+// schema.sql
+create table users(
+	username varchar_ignorecase(50) not null primary key,
+	password varchar_ignorecase(50) not null,
+	enabled boolean not null
+);
+
+create table authorities (
+	username varchar_ignorecase(50) not null,
+	authority varchar_ignorecase(50) not null,
+	constraint fk_authorities_users foreign key(username) references users(username)
+);
+create unique index ix_auth_username on authorities (username,authority);
+```
+The next thing is to create two users like we did before. These users will follow the schema we have, and then we will load them into the database. We do that by creating a file called "data.sql" and this is where our user data will be. see below
+```sql
+// data.sql
+insert into users (username, password, enabled)
+values ('thesarfo', 'password', true);
+
+insert into users (username, password, enabled)
+values ('admin', 'adminpassword', true);
+
+insert into authorities (username, authority)
+values ('thesarfo', 'ROLE_USER');
+
+insert into authorities (username, authority)
+values ('admin', 'ROLE_ADMIN');
+```
+
+Now, we have a schema for our users, and we have created users that will be populated into our database at runtime. So now we can access the endpoints in our controller, and we might be authorized or unauthorized based on the role of the user we are trying to log in as.
+
+This is our ideal use case. We create our schema, and users ourselves and just tell spring security to connect to the database.
 
 
+Now assuming we have a custom schema, or lets say our users/authorities table have different names than the default. How do we tell spring security to use that schema instead. Since spring security will need the username and authority from their respective tables. Well there are two methods for that. ".usersByUsernameQuery()" and ".authoritiesByUsernameQuery()". see below
+```java
+// assuming the user table and authorities table are called my_user and my_authorities
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, enabled "
+                        + "from my_users "
+                        + "where username = ?")
+                .authoritiesByUsernameQuery("select username, authority "
+                        + "from my_authorities "
+                        + "where username = ?");
+   }
+```
 
-
-
+### What if you had a real database??
+What if instead of h2/in memory, we had a postgres or oracledb somewhere that we want to connect to. It's simple. We just go to our application.properties and specify the following properties for our database
+```yaml
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+```
 
 
 
