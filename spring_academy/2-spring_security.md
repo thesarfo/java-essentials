@@ -65,7 +65,7 @@ Now, once we configure the AuthenticationBuilderManager with the above configura
 HOW DO YOU GET HOLD OF THE AUTHENTICATION BUILDER MANAGER ?
 In a Spring Security application, developers can define a method named userDetailsService() within a class called SecurityConfiguration. This method configures user details for in-memory authentication. If developers don't override this method, Spring Security will use default details. Inside userDetailsService(), developers create user details using User.withDefaultPasswordEncoder(). They then initialize an InMemoryUserDetailsManager with these details. The method returns the configured InMemoryUserDetailsManager instance as a bean, registered in the application context for authentication. see below for an example
 ```java
-@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration{
     @Bean
     public InMemoryUserDetailsManager userDetailsService(){
@@ -82,7 +82,7 @@ public class SecurityConfiguration{
 
 In the above example, we are using a plain text password, but it is essential to hash our passwords, normally by creating a bean to hash/encode our passwords. something like this
 ```java
-@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
     @Bean
@@ -117,25 +117,11 @@ Now, we know that all APIs need authentication, but what we want to do is that w
 
 
 So before we do that, we need to get hold of our authorization object, to configure authorization, just like we did with authentication. When doing authentication, we were about to use the AuthenticationManagerbuilder, but since that was deprecated, we went with the InMemoryDetailsManager. For authorization, we would've used HttpSecurity, but since that is deprecated, we will use a SecurityFilterChain. Note that the below implementation assumes that you have two users, one with the role of "USER" and another with the role of "ADMIN". see below
-```java
-@Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorizeHttpRequests ->
-                        authorizeHttpRequests
-                                .requestMatchers("/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                )
-                .formLogin(withDefaults());
-        return http.build();
-
-    }
-```
 We are configuring a SecurityFilterChain for HttpSecurity, specifying authorization rules for HTTP requests. All paths (/**) are restricted only to users with the role of ADMIN. Additionally, authentication is required for any other request. The configuration also enables default form-based authentication.
 
 Our security configuration will look like this
 ```java
-@Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
@@ -193,7 +179,6 @@ First, we need to specify a datasource(database), and then configure the datasou
 
 After which, we will use a SecurityFilterChain to authorize the requests and endpoints to the users and roles we have created in our database. see below for a sample configuration
 ```java
-@Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
     @Autowired
@@ -311,6 +296,17 @@ spring.datasource.url=
 spring.datasource.username=
 spring.datasource.password=
 ```
+
+## JPA Authentication and MySQL
+Since this is a jpa project with mysql, we will need to add those dependencies. These are the dependencies we need
+1. Spring web
+2. Spring security
+3. Spring jpa
+4. Mysql driver
+
+
+Refer to [this article](https://www.codejava.net/frameworks/spring-boot/spring-boot-security-authentication-with-jpa-hibernate-and-mysql) or the [github repo](https://github.com/thesarfo/sb-sec/tree/master/jpa-auth) for the full implementation.
+
 
 
 
