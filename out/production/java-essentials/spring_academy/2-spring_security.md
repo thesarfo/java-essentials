@@ -306,3 +306,11 @@ Since this is a jpa project with mysql, we will need to add those dependencies. 
 
 
 Refer to [this article](https://www.codejava.net/frameworks/spring-boot/spring-boot-security-authentication-with-jpa-hibernate-and-mysql) or the [github repo](https://github.com/thesarfo/sb-sec/tree/master/jpa-auth) for the full implementation.
+
+
+
+
+
+
+
+
