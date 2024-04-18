@@ -598,3 +598,180 @@ This enhanced `JwtFilter` now integrates with the `userDetailsService` to levera
 6. Sets the authentication object in the `SecurityContext`, informing Spring Security about the authenticated user.
 
 By setting the authentication in the `SecurityContext`, subsequent filters and authorization checks in Spring Security can access the user information and make authorization decisions based on the user's roles or permissions (typically retrieved from the `userDetails` object).
+
+
+### Implementing the Authentication Controller
+```java
+@RestController
+@RequestMapping("auth")
+@RequiredArgsConstructor
+@Tag(name = "Authentication")
+public class AuthenticationController {
+    private final AuthenticationService service;
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<?> register(
+            @RequestBody @Valid RegistrationRequest request
+    ) {
+        service.register(request);
+        return ResponseEntity.accepted().build();
+    }
+}
+```
+**Annotations:**
+
+- `@RestController`: Marks the class as a REST controller, handling incoming HTTP requests and returning responses in a format like JSON.
+- `@RequestMapping("auth")`: Defines the base path for all request mappings handled by this controller, which will be "/auth" in this case.
+- `@RequiredArgsConstructor`: Constructor injection for required dependencies (discussed later).
+- `@Tag(name = "Authentication")`: This annotation is likely a custom annotation or part of a third-party library for documentation purposes. It might be used to categorize this controller as related to authentication.
+
+**Property:**
+
+- `private final AuthenticationService service`: An injected dependency holding a reference to an `AuthenticationService` bean. This service handles the core logic for user registration.
+
+**`register` Method:**
+
+- `@PostMapping("/register")`: Maps this method to handle POST requests to the "/auth/register" endpoint.
+- `@ResponseStatus(HttpStatus.ACCEPTED)`: Sets the response status code to `202 Accepted` for successful registration.
+- `public ResponseEntity<?> register(@RequestBody @Valid RegistrationRequest request)`:
+    - The method accepts a POST request body containing a `RegistrationRequest` object (likely containing user information like username, password, etc.).
+    - The `@RequestBody` annotation indicates that the request body should be mapped to the `RegistrationRequest` object.
+    - The `@Valid` annotation triggers Spring's validation framework to validate the `RegistrationRequest` object before proceeding (assuming validation annotations are present on the `RegistrationRequest` class).
+    - The method doesn't return a specific object but uses `ResponseEntity.accepted().build()` to construct a response with the `202 Accepted` status code.
+
+**Overall Functionality:**
+
+This controller acts as an entry point for user registration through a REST API. When a POST request is sent to "/auth/register" with a valid `RegistrationRequest` object in the body, the controller:
+
+1. Validates the request body using Spring's validation framework.
+2. Delegates the registration logic to the injected `AuthenticationService`. The specific implementation details of the `AuthenticationService` would determine how user registration is handled (e.g., saving user data to a database, sending confirmation emails).
+3. Returns a `202 Accepted` response, indicating successful registration processing.
+
+Now we need to create the RegistrationRequest object that will be passed as a request body
+```java
+@Getter
+@Setter
+@Builder
+public class RegistrationRequest {
+
+    @NotEmpty(message = "First name is mandatory")
+    @NotBlank(message = "First name is mandatory")
+    private String firstname;
+
+    @NotEmpty(message = "Last name is mandatory")
+    @NotBlank(message = "Last name is mandatory")
+    private String lastname;
+
+    @Email(message = "Email is not formatted properly")
+    @NotEmpty(message = "Email is mandatory")
+    @NotBlank(message = "Email is mandatory")
+    private String email;
+
+    @NotEmpty(message = "Password is mandatory")
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password should be at least 8 characters long")
+    private String password;
+}
+```
+
+### Implementing the Authentication Service
+Below is how we will start building the auth service
+```java
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
+
+    public void register(RegistrationRequest request) {
+        var userRole = roleRepository.findByName("USER")
+                // TODO - better exception handling
+                .orElseThrow(() -> new IllegalStateException("ROLE USER NOT INITIALIZED"));
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .accountLocked(false)
+                .enabled(false)
+                .roles(List.of(userRole))
+                .build();
+        userRepository.save(user);
+        sendValidationEmail(user);
+    }
+
+    private void sendValidationEmail(User user) {
+        var newToken = generateAndSaveActivationToken(user);
+        // send email
+    }
+
+    private Object generateAndSaveActivationToken(User user) {
+        // generate activation token
+        String generatedToken = generateActivationCode(6);
+        var token = Token.builder()
+                .token(generatedToken)
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now())
+                .user(user)
+                .build();
+        tokenRepository.save(token);
+
+        return generatedToken;
+    }
+
+    private String generateActivationCode(int length) {
+        String characters = "01233456789";
+        StringBuilder codeBuilder = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = secureRandom.nextInt(characters.length());
+            codeBuilder.append(characters.charAt(randomIndex));
+        }
+        return codeBuilder.toString();
+    }
+}
+```
+**Dependencies:**
+
+- `RoleRepository`: Provides access to the repository for managing user roles.
+- `PasswordEncoder`: Injected for securely hashing user passwords before storage.
+- `UserRepository`: Provides access to the repository for managing user data.
+- `TokenRepository` (assumed): Provides access to the repository for managing user tokens (likely activation tokens in this case).
+
+**`register` Method:**
+
+- This method is responsible for processing user registration requests.
+- It retrieves the "USER" role from the database using `roleRepository.findByName("USER")`. (**Note:** The code throws an exception if the role is not found. Consider more robust error handling).
+- It creates a new `User` object using a builder pattern, setting the user's details from the `RegistrationRequest` object.
+- Importantly, it uses the `passwordEncoder` to encode the user's password before storing it. This ensures secure password storage, as only the hashed version is saved in the database.
+- The user object is marked as `accountLocked(false)` (not locked) and `enabled(false)` (not enabled until email verification).
+- It sets the user's roles to a list containing the retrieved "USER" role.
+- The user object is saved to the database using `userRepository.save(user)`.
+- The method calls `sendValidationEmail(user)` to initiate the email verification process (implementation details not shown).
+
+**Email Verification (Helper Methods):**
+
+- `sendValidationEmail(User user)`: This method likely triggers sending an email containing a verification link or token to the user's email address.
+- `generateAndSaveActivationToken(User user)`: This method generates a random alphanumeric activation code (6 characters in this example) and saves it as a `Token` object associated with the user.
+    - It uses `generateActivationCode(int length)` to generate the random code.
+    - The `Token` object is then saved to the database using `tokenRepository.save(token)`.
+
+**Overall Functionality:**
+
+This `AuthenticationService` implements a user registration process with email verification. Here's a simplified flow:
+
+1. User submits a registration request with their details.
+2. The service validates the request data.
+3. It retrieves the "USER" role (assuming user roles are predefined).
+4. It creates a new user object with encoded password, disabled account, and the "USER" role.
+5. The user is saved to the database.
+6. An activation token is generated and saved along with the user.
+7. (Not shown) An email containing the activation link or token is sent to the user's email address.
+
+The user would then need to click the verification link or enter the token to complete their registration and activate their account.
+
+### Email Service
