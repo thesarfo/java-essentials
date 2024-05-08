@@ -45,3 +45,101 @@
 * Services encapsulate business logic and interact with repositories.
 * Mappers translate between DTO and entity formats.
 * These components work together for a well-structured and maintainable application.
+
+
+## Implementing a DTO 
+
+For instance, we have a student entity, which has all the information about the user. Now when making a request that needs the student as a request body, we dont want to send the entire user object. This is where a dto comes in. In a DTO object, we can specify only the fields in the student entity we need to make the request, and then pass the dto as a request body. see below
+
+```java
+public record StudentDto(
+    String firstName,
+    String lastName,
+    String email
+){
+
+}
+```
+
+Now our controller can look like this
+```java
+@PostMapping("/students")
+public Student post(
+    @RequestBody StudentDto student
+){
+    return repository.save(student);
+}
+```
+
+Now, perhaps the repository is expecting to save a student object, but we are passing a dto object to it. Which means that we need to have a method that converts the dto object into an actual student entity. 
+
+```java
+private Student toStudent(StudentDto dto){
+    // we can use the constructor to do the conversion or we can use getters and setters. below we use getters and setters
+    var Student = new Student();
+    student.setFirstName(dto.firstname());
+    student.setLastName(dto.lastname());
+    student.setEmail(dto.email());
+}
+```
+
+And now in our controller, we have to create a student object, which calls the toStudent method and takes the dto as a param. see below
+
+```java
+@PostMapping("/students")
+public Student post(
+    @RequestBody StudentDto studenDto
+){
+    var student = toStudent(studentDto);
+    return repository.save(student);
+}
+```
+
+But if you look at the controller above, we actually return the entire Student entity/object, which will still return the sensitive stuff of the student. So now we need to create another dto, that we will use to handle our responses. see below
+
+```java
+public record StudentResponseDto(
+    String firstname,
+    String lastname,
+    String email
+){
+      
+}
+```
+
+And now instead of returning a Student in the controller, we return a StudentResponseDto
+
+```java
+@PostMapping("/students")
+public StudentResponseDto post(
+    @RequestBody StudentDto studenDto
+){
+    var student = toStudent(studentDto);
+    return repository.save(student);
+}
+```
+
+But note that, the repository is returning a Student object, but we are returning a StudentReponseDto on the method level. So we need to create a method which then takes a student object as a param, and then convert it into a StudentResponseDto. see below
+
+```java
+private StudentResponseDto toStudentResponseDto(Student student){
+    return new StudentREsponseDto(
+        student.getFirstName(),
+        student.getLastName(),
+        student.getEmail()
+    );
+}
+```
+
+And now, in our controller, we need to convert the dto to a student object, and then return the student object as a studentresponsedto object. see below
+
+```java
+@PostMapping("/students")
+public Student post(
+    @RequestBody StudentDto studenDto
+){
+    var student = toStudent(studentDto);
+    var savedStudent = repository.save(student);
+    return toStudentResponseDto(savedStudent);
+}
+```
