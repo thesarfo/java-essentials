@@ -5,7 +5,7 @@ To begin with, we need to define the security configuration for our application.
 @EnableWebSecurity
 public class SecurityConfigurer {
     
-    private final JwtRequestFilter jwtRequestFilter
+    private final JwtRequestFilter jwtRequestFilter;
 
     // the below is a hardcoded user
     @Bean
@@ -30,10 +30,11 @@ public class SecurityConfigurer {
                         .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                         .and()
-                        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionManagement()
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class)
                         
-                        // now we need to make the session stateless, since we will be using jwt. But we need to add a filter to intercept the requests and validate the jwt token before we can make the session stateless. That is where we use the .addFilterBefore() method to add the JwtRequestFilter before the UsernamePasswordAuthenticationFilter
+                        // now we need to make the session stateless, since we will be using jwt. But we need to add a filter to intercept the requests and validate the jwt token before we can make the session stateless. That is where we use the .addFilterBefore() method to add the JwtRequestFilter before the UsernamePasswordAuthenticationFilter which is the default filter that Spring Security uses to authenticate the user.
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
