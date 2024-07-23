@@ -1,0 +1,1 @@
+I will assume that you already have db credentials for this. so lets get straight into implementation. So first we need to create a "main" package, which will include our `Main` class. This is where we will create our application context.
